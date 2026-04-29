@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Grupo predeterminado">
+  <defs>
+    <linearGradient id="groupBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5B1FD9"/>
+      <stop offset="100%" stop-color="#3A00AE"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="36" fill="url(#groupBg)"/>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="128" cy="86" r="34" stroke-width="12"/>
+    <circle cx="78" cy="112" r="22" stroke-width="10" opacity="0.95"/>
+    <circle cx="178" cy="112" r="22" stroke-width="10" opacity="0.95"/>
+    <path d="M56 196c4-25 22-40 44-40h56c22 0 40 15 44 40" stroke-width="12"/>
+    <path d="M38 196c2-14 10-25 22-31" stroke-width="10" opacity="0.9"/>
+    <path d="M218 196c-2-14-10-25-22-31" stroke-width="10" opacity="0.9"/>
+  </g>
+</svg>
