@@ -21,7 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 export class PostComponent implements OnInit {
   items: MenuItem[] | undefined;
   user!: IUserData;
-  
+
   constructor(private router: Router, private userService: UserService, private forumService: ForumService, private authService: AuthService, private postService: PostService, private toastr: ToastrService) { }
 
   @Input() post!: IPost;
@@ -49,7 +49,7 @@ export class PostComponent implements OnInit {
   }
 
   goForum(id_forum: number) {
-    this.forumService.setTempId(id_forum);  
+    this.forumService.setTempId(id_forum);
     this.router.navigate(['/forum']);
   }
 
@@ -59,7 +59,6 @@ export class PostComponent implements OnInit {
   @Output() id_user = new EventEmitter<number>();
 
   showOptions() {
-    console.log('showOptions');
   }
 
   deletePost(id_post: number) {
@@ -72,7 +71,7 @@ export class PostComponent implements OnInit {
       error: (error: any) => {
         this.toastr.error('Error al eliminar el post');
       }
-    }); 
+    });
   }
 
   goComments(id_post: number) {

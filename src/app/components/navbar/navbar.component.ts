@@ -68,7 +68,6 @@ export class NavbarComponent implements OnInit {
 
   onAddPost(): void {
     // Aquí puedes agregar la lógica para redirigir al usuario a la página de crear publicación
-    console.log('Añadir nueva publicación');
   }
 
   goProfile() {

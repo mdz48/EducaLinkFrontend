@@ -15,9 +15,9 @@ export class FollowingSideComponent implements OnInit {
   user: IUserData = {} as IUserData;
   following: IUserData[] = [];
   constructor(
-    private  authService: AuthService,
-    private  userService: UserService
-  ) {} 
+    private authService: AuthService,
+    private userService: UserService
+  ) { }
 
   ngOnInit(): void {
     this.user = this.authService.getUser() as IUserData;
@@ -29,7 +29,6 @@ export class FollowingSideComponent implements OnInit {
       this.userService.getFollowing(this.userService.getTempId()).subscribe({
         next: (data: IUserData[]) => {
           this.following = data;
-          console.log(this.following);
         },
         error: (err) => {
           console.error(err);
@@ -39,7 +38,6 @@ export class FollowingSideComponent implements OnInit {
       this.userService.getFollowing(this.user.id_user).subscribe({
         next: (data: IUserData[]) => {
           this.following = data;
-          console.log(this.following);
         },
         error: (err) => {
           console.error(err);

@@ -224,7 +224,6 @@ export class SearchPageComponent implements OnInit {
   }
 
   search(search: string) {
-    console.log(search);
     this.searchValue = search;
     this.ngOnInit();
   }

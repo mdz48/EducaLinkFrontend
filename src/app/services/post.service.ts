@@ -16,7 +16,7 @@ import { environment } from '../../environments/environment';
 export class PostService {
   private url = environment.apiUrl;
   private tempId: number = 0;
-  constructor(private http: HttpClient, readonly authService: AuthService) {}
+  constructor(private http: HttpClient, readonly authService: AuthService) { }
 
   // Método para obtener los encabezados dinámicamente
   private getHttpOptions() {
@@ -49,12 +49,12 @@ export class PostService {
   getPostByEducationLevel(education_level: string): Observable<IPost> {
     return this.http.get<IPost>(`${this.url}/post/education_level/${education_level}/`, this.getHttpOptions());
   }
-  
+
   getPostByForum(list: number[]): Observable<IPost[]> {
     const requests = list.map((id) => this.http.get<IPost>(`${this.url}/posts/forum/${id}`, this.getHttpOptions()));
     return forkJoin([...requests]);
   }
-  
+
   getForumPosts(forum_id: number): Observable<IPost[]> {
     return this.http.get<IPost[]>(`${this.url}/posts/forum/${forum_id}`, this.getHttpOptions());
   }
@@ -72,7 +72,6 @@ export class PostService {
   }
 
   getPostsByUser(user_id: number): Observable<IPost[]> {
-    console.log(user_id);
     return this.http.get<IPost[]>(`${this.url}/post/user/${user_id}/`, this.getHttpOptions());
   }
 

@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './registergroup.component.html',
   styleUrl: './registergroup.component.css'
 })
-export class RegistergroupComponent implements OnInit{
+export class RegistergroupComponent implements OnInit {
   forums: IForum[] = [];
   user: IUserData = {} as IUserData;
   constructor(readonly forumService: ForumService, private toastr: ToastrService, private router: Router, private authService: AuthService) {
@@ -30,11 +30,9 @@ export class RegistergroupComponent implements OnInit{
   }
 
   finalizar() {
-    console.log(this.user.id_user);
-    let user_id : number = this.user.id_user;
+    let user_id: number = this.user.id_user;
     this.forumService.getForumsByUser(user_id).subscribe((data) => {
-      console.log(data);
-      if (data.length == null || data.length == 0) { 
+      if (data.length == null || data.length == 0) {
         this.toastr.error('Escoge al menos un grupo')
       } else {
         this.router.navigate(['/home'])

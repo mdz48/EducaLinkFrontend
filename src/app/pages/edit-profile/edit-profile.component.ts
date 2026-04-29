@@ -72,7 +72,6 @@ export class EditProfileComponent implements OnInit {
 
       this.userService.updateUser(this.userData.id_user, formData).subscribe({
         next: () => {
-          console.log('Perfil actualizado con éxito');
           this.router.navigate(['/profile', this.userData.id_user]);
         },
         error: (err) => {

@@ -17,7 +17,7 @@ import { ISaleChat } from '../../models/isale-chat';
   imports: [CommonModule, FormsModule, NavbarComponent, ReactiveFormsModule],
   templateUrl: './sale-chat.component.html',
   styleUrl: './sale-chat.component.css'
-  
+
 })
 export class SaleChatComponent implements OnInit {
   chats: ISaleChat[] = [];
@@ -33,7 +33,7 @@ export class SaleChatComponent implements OnInit {
     private chatService: ChatService,
     private userService: UserService,
     private authService: AuthService
-  ) { 
+  ) {
     this.messageForm = new FormGroup({
       message: new FormControl('', Validators.required)
     });
@@ -45,11 +45,10 @@ export class SaleChatComponent implements OnInit {
   }
 
   getChatUsers() {
-    const id_user = this.user.id_user; 
+    const id_user = this.user.id_user;
     this.chatService.getSaleChatUsers(id_user).subscribe({
       next: (chats: ISaleChat[]) => {
         this.chats = chats;
-        console.log(this.chats);
       },
       error: (error) => {
         console.error(error);
@@ -59,7 +58,7 @@ export class SaleChatComponent implements OnInit {
 
   selectChat(chatId: number) {
     this.selectedChatId = chatId;
-    
+
     const chat = this.chats.find(c => c.id_sale_chat === chatId);
     if (chat) {
       const receiverId = chat.buyer.id_user;
@@ -75,8 +74,8 @@ export class SaleChatComponent implements OnInit {
 
   sendMessage(chatId: number) {
     if (this.selectedChatId !== null && this.messageForm.valid) {
-     
-      this.chatService.createSaleMessage({message: this.messageForm.value.message, chat_id: chatId}).subscribe(message => {
+
+      this.chatService.createSaleMessage({ message: this.messageForm.value.message, chat_id: chatId }).subscribe(message => {
         this.messages.push(message);
         this.messageForm.reset();
 

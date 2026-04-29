@@ -41,12 +41,12 @@ export class CreateSalePostComponent {
   createPost(): void {
     if (this.createPostForm.valid) {
       const formData = new FormData();
-      
+
       formData.append('title', this.createPostForm.value.title);
       formData.append('description', this.createPostForm.value.description);
       formData.append('price', this.createPostForm.value.price.toString());
       formData.append('type', this.createPostForm.value.category);
-      
+
       if (this.image) {
         formData.append('image', this.image);
       } else {
@@ -64,14 +64,10 @@ export class CreateSalePostComponent {
         }
       });
     } else {
-      console.log('Estado del formulario:', this.createPostForm.value);
-      console.log('Errores del formulario:', this.createPostForm.errors);
       Object.keys(this.createPostForm.controls).forEach(key => {
         const control = this.createPostForm.get(key);
-        console.log(`${key} válido:`, control?.valid);
-        console.log(`${key} errores:`, control?.errors);
       });
-      
+
       this.toastr.error('Por favor complete todos los campos correctamente');
     }
   }
@@ -91,7 +87,7 @@ export class CreateSalePostComponent {
       reader.readAsDataURL(this.image);
     }
   }
-  
+
 
   // Convertir archivo a base64
   convertFileToBase64(file: File, callback: (base64: string | null) => void): void {

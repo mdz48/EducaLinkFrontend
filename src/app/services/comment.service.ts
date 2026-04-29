@@ -10,13 +10,11 @@ import { environment } from '../../environments/environment';
 })
 export class CommentService {
   private url = environment.apiUrl;
-  
+
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   createComment(comment_text: string, post_id: number): Observable<any> {
-    console.log(comment_text, post_id);
-    console.log(this.authService.getToken());
-    return this.http.post<any>(`${this.url}/comment`, {comment_text, post_id}, {
+    return this.http.post<any>(`${this.url}/comment`, { comment_text, post_id }, {
       headers: {
         'Authorization': `Bearer ${this.authService.getToken()}`
       }

@@ -33,25 +33,20 @@ export class CommentsComponent implements OnInit {
       comment: new FormControl('', [Validators.required])
     });
   }
-  
+
   ngOnInit() {
     this.tempId = this.userService.getTempId();
-    console.log(this.tempId);
     this.user = this.authService.getUser() as IUserData;
-    console.log(this.user);
     this.postService.getPostById(this.tempId).subscribe((post: IPost) => {
-        this.post = post;
-        console.log(this.post);
+      this.post = post;
     });
     if (this.tempId !== 0) {
-        this.postService.getCommentsByPostId(this.tempId).subscribe((comments: IComment[]) => {
-            this.comments = comments;
-            console.log(this.comments);
-            this.comments.sort((a, b) => new Date(b.comment_date).getTime() - new Date(a.comment_date).getTime());
-            console.log(this.comments);
-        });
+      this.postService.getCommentsByPostId(this.tempId).subscribe((comments: IComment[]) => {
+        this.comments = comments;
+        this.comments.sort((a, b) => new Date(b.comment_date).getTime() - new Date(a.comment_date).getTime());
+      });
     } else {
-        console.error('El ID del post es 0, no se pueden cargar los comentarios.');
+      console.error('El ID del post es 0, no se pueden cargar los comentarios.');
     }
   }
 

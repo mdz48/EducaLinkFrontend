@@ -88,10 +88,6 @@ export class HomeComponent implements OnInit {
       this.isLoadingForums = true;
       this.loadAds();
       setTimeout(() => {
-        console.log('Estado actual:');
-        console.log('Anuncios:', this.ads);
-        console.log('Primer anuncio:', this.ads[0]);
-        console.log('Posts:', this.posts.length);
       }, 2000);
       this.filterByRecommended(userData);
     } else {
@@ -108,14 +104,11 @@ export class HomeComponent implements OnInit {
       next: (data: IForum[]) => {
         this.forums = data;
         this.isLoadingForums = false;
-        console.log(this.forums);
         this.idForums = data.map((forum: IForum) => forum.id_forum);
-        console.log(this.idForums);
         this.postService.getPostsByForumExcludeUser(this.idForums, user.id_user).subscribe({
           next: (data: IPost[]) => {
             this.posts = data.flat();
             this.isLoadingPosts = false;
-            console.log(this.posts);
           },
           error: (err) => {
             this.isLoadingPosts = false;
@@ -149,11 +142,9 @@ export class HomeComponent implements OnInit {
   loadAds() {
     this.adService.getAds().subscribe({
       next: (data: IAd[]) => {
-        console.log('Anuncios recibidos:', data);
         if (data && data.length > 0) {
           this.ads = data;
           this.shuffledAds = this.shuffleArray([...data]);
-          console.log('Anuncios mezclados:', this.shuffledAds);
         }
       },
       error: (err) => {
@@ -169,7 +160,6 @@ export class HomeComponent implements OnInit {
     this.posts = [];
     this.userService.getFollowing(this.user.id_user).subscribe({
       next: (data: IUserData[]) => {
-        console.log(data);
         this.idFollowed = data.map((user: IUserData) => user.id_user);
         if (this.idFollowed.length === 0) {
           this.isLoadingPosts = false;

@@ -27,15 +27,14 @@ export class UserService {
     private http: HttpClient,
     private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
   updateUser(user_id: number, userData: FormData): Observable<IUserData> {
-    console.log('User data:', userData);
     return this.http.put<IUserData>(`${this.url}/user/${user_id}/`, userData, {
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Authorization': `Bearer ${this.authService.getToken()}`
-        },
-        observe: 'body'
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': `Bearer ${this.authService.getToken()}`
+      },
+      observe: 'body'
     });
   }
 
@@ -64,7 +63,6 @@ export class UserService {
 
       const encodedEducationLevel = encodeURIComponent(educationLevel);
       const url = `${this.url}/forum/education_level/${encodedEducationLevel}/`;
-      console.log('Requesting URL:', url);
       return this.http.get<IForum[]>(url, this.authService.getHttpOptions());
     } else {
       // Estamos en el servidor, no hacemos la solicitud
@@ -105,7 +103,7 @@ export class UserService {
   }
 
   leaveForum(forum_id: number, user_id: number): Observable<any> {
-    
+
     return this.http.delete<any>(`${this.url}/user/leave_forum/${user_id}/${forum_id}/`, this.authService.getHttpOptions());
   }
 }

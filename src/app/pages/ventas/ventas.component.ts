@@ -13,9 +13,9 @@ import { MenuItem } from 'primeng/api';
   selector: 'app-ventas',
   standalone: true,
   imports: [
-    CommonModule, 
-    NavbarComponent, 
-    PostventaComponent, 
+    CommonModule,
+    NavbarComponent,
+    PostventaComponent,
     RouterLink,
     MenuModule
   ],
@@ -95,7 +95,7 @@ export class VentasComponent implements OnInit {
     }
   ];
 
-  constructor(private saleService: SaleService) {}
+  constructor(private saleService: SaleService) { }
 
   ngOnInit(): void {
     this.loadSalePosts();
@@ -103,7 +103,6 @@ export class VentasComponent implements OnInit {
 
   loadSalePosts(): void {
     this.saleService.getSalePosts().subscribe(data => {
-      console.log('Todos los posts:', data);
       this.salePosts = data;
       this.originalPosts = data; // Guardar los posts originales.
     });
@@ -114,7 +113,6 @@ export class VentasComponent implements OnInit {
       this.salePosts = [...this.originalPosts]; // Mostrar todos los posts.
     } else {
       this.saleService.getSalePostsByType(category).subscribe(data => {
-        console.log(`Posts filtrados por categoría ${category}:`, data);
         this.salePosts = data;
       });
     }

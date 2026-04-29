@@ -17,12 +17,12 @@ import { DialogModule } from 'primeng/dialog';
   selector: 'app-ads',
   standalone: true,
   imports: [
-    NavbarComponent, 
-    ReactiveFormsModule, 
-    FloatLabelModule, 
-    InputTextModule, 
-    NgClass, 
-    TableModule, 
+    NavbarComponent,
+    ReactiveFormsModule,
+    FloatLabelModule,
+    InputTextModule,
+    NgClass,
+    TableModule,
     DatePipe,
     DialogModule
   ],
@@ -39,7 +39,7 @@ export class AdsComponent implements OnInit {
     private authService: AuthService,
     private adService: AdService,
     private toastr: ToastrService
-  ){
+  ) {
     this.adForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -53,13 +53,13 @@ export class AdsComponent implements OnInit {
     this.loadAds();
   }
 
-  loadAds(){
+  loadAds() {
     this.adService.getAds().subscribe({
       next: (ads) => {
         this.ads = ads;
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
       }
     });
   }
@@ -72,7 +72,7 @@ export class AdsComponent implements OnInit {
   }
 
   createAd() {
-    if(this.adForm.valid) {
+    if (this.adForm.valid) {
       const formData = new FormData();
       formData.append('title', this.adForm.get('title')?.value);
       formData.append('description', this.adForm.get('description')?.value);
