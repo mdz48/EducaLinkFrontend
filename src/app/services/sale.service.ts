@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ISalePost } from '../models/isale-post';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SaleService {
-  private apiUrl = 'http://98.85.11.22:8000/sale-post/';
-  // private apiUrl = 'http://localhost:8000/sale-post/';
+  private apiUrl = `${environment.apiUrl}/sale-post/`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

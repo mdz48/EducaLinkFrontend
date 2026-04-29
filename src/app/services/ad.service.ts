@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { IAd } from '../models/iad';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdService {
-  private url = 'http://98.85.11.22:8000';
-  // private url = 'http://localhost:8000';
+  private url = environment.apiUrl;
 
   getAds(): Observable<IAd[]> {
     return this.http.get<IAd[]>(`${this.url}/ads/`, this.getHttpOptions());

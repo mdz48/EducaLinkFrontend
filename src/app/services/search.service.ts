@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
-  private url = 'http://98.85.11.22:8000';
-  // private url = 'http://localhost:8000';
+  private url = environment.apiUrl;
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   searchForumsByName(name: string) {

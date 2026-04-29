@@ -7,13 +7,13 @@ import { IMessage } from '../models/imessage';
 import { AuthService } from '../auth/auth.service';
 import { ISaleMessage } from '../models/isale-message';
 import { ISaleChat } from '../models/isale-chat';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://98.85.11.22:8000';
-  // private apiUrl = 'http://localhost:8000';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private authService:AuthService) {}
 

@@ -3,13 +3,13 @@ import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IComment } from '../models/icomment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
-  private url = 'http://98.85.11.22:8000';
-  // private url = 'http://localhost:8000';
+  private url = environment.apiUrl;
   
   constructor(private http: HttpClient, private authService: AuthService) { }
 

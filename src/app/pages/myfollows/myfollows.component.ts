@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { PostComponent } from '../../components/post/post.component';
@@ -6,12 +6,13 @@ import { IUserData } from '../../models/iuser-data';
 import { IPost } from '../../models/ipost';
 import { UserService } from '../../services/user.service';
 import { PostService } from '../../services/post.service';
+import { AuthService } from '../../auth/auth.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-myfollows',
   standalone: true,
-  imports: [NavbarComponent,CommonModule,PostComponent],
+  imports: [NavbarComponent, CommonModule, PostComponent],
   templateUrl: './myfollows.component.html',
   styleUrl: './myfollows.component.css'
 })
@@ -20,7 +21,11 @@ export class MyfollowsComponent implements OnInit {
   loading = false;
   error = '';
 
-  constructor(private userService: UserService, private postService: PostService) {}
+  constructor(
+    private userService: UserService,
+    private postService: PostService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.fetchFollowedPosts();
@@ -28,20 +33,20 @@ export class MyfollowsComponent implements OnInit {
 
   fetchFollowedPosts(): void {
     this.loading = true;
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-  
+    const user = this.authService.getUser();
+
     if (!user?.id_user) {
       this.error = 'Usuario no autenticado.';
       this.loading = false;
       return;
     }
-  
+
     this.userService.getFollowing(user.id_user).subscribe({
       next: (followers: IUserData[]) => {
         const postRequests = followers.map((follower) =>
           this.postService.getPostsByUser(follower.id_user)
         );
-  
+
         forkJoin(postRequests).subscribe({
           next: (results) => {
             this.posts = results.flat();

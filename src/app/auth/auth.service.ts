@@ -3,6 +3,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IUserData } from '../models/iuser-data';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -11,8 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class AuthService {
   private isLoggedIn = false;
   private token: string | null = null;
-  private url = 'http://98.85.11.22:8000';
-  // private url = 'http://localhost:8000';
+  private url = environment.apiUrl;
   private user: IUserData | null = null;
   private options = {
     headers: new HttpHeaders({
@@ -77,6 +77,10 @@ export class AuthService {
     return {
       headers: new HttpHeaders(headersConfig),
     };
+  }
+
+  checkHealth(): Observable<any> {
+    return this.http.get<any>(`${this.url}/health`);
   }
 
   isAlreadyRegistered(correo: string): Observable<any> {

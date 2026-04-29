@@ -21,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterComponent {
   registerForm: FormGroup;
   grades: number[] = []; // Almacena los grados según el nivel académico seleccionado.
+  loading = false;
   constructor(
     readonly authService: AuthService,
     readonly router: Router,
@@ -33,7 +34,7 @@ export class RegisterComponent {
       lastname: new FormControl('', Validators.required),
       mail: new FormControl('', [Validators.required, Validators.email]),
       education_level: new FormControl('', Validators.required),
-      grade: new FormControl({ value: '', disabled: true }, Validators.required), 
+      grade: new FormControl({ value: '', disabled: true }, Validators.required),
       password: new FormControl('', [Validators.required, Validators.minLength(4)]),
       user_type: new FormControl('User'),
       state: new FormControl('Activo'),
@@ -65,17 +66,26 @@ export class RegisterComponent {
   }
 
   setData(): void {
+    if (this.loading) return;
+    this.loading = true;
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
-        this.authService.login(this.registerForm.value.mail, this.registerForm.value.password).subscribe((res) => {
-          this.authService.setToken(res.access_token);
-          this.userService.setData(res.token_data);
-          this.authService.setIsLoggedIn(true);
-          localStorage.setItem('user', JSON.stringify(res.token_data));
-          this.router.navigate(['/registergroup']);
+        this.authService.login(this.registerForm.value.mail, this.registerForm.value.password).subscribe({
+          next: (res) => {
+            this.authService.setToken(res.access_token);
+            this.userService.setData(res.token_data);
+            this.authService.setIsLoggedIn(true);
+            this.authService.setUser(res.token_data);
+            this.router.navigate(['/registergroup']);
+          },
+          error: () => {
+            this.loading = false;
+            this.toastr.error('No se pudo iniciar sesión tras crear la cuenta', 'Error');
+          }
         });
       },
       error: (error) => {
+        this.loading = false;
         if (error.status === 400) {
           this.toastr.error('El correo ya está registrado', 'Error');
         } else {

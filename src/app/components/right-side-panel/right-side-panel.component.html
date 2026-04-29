@@ -6,9 +6,23 @@
             Ver mas
         </button>
         </div>
-        <ng-container *ngFor="let forum of forums | slice:0:3">
-        <app-group-item [forum]="forum"></app-group-item>
+        <ng-container *ngIf="loadingForums; else forumsContent">
+            <div class="space-y-3">
+                <div class="flex items-center gap-3" *ngFor="let _ of [1, 2, 3]">
+                    <p-skeleton shape="circle" size="3rem"></p-skeleton>
+                    <div class="flex-1 space-y-2">
+                        <p-skeleton width="70%" height="1rem"></p-skeleton>
+                        <p-skeleton width="45%" height="0.9rem"></p-skeleton>
+                    </div>
+                </div>
+            </div>
         </ng-container>
+        <ng-template #forumsContent>
+            <ng-container *ngFor="let forum of forums | slice:0:3">
+            <app-group-item [forum]="forum"></app-group-item>
+            </ng-container>
+            <p class="text-center text-gray-500" *ngIf="forums.length == 0">No hay grupos para mostrar</p>
+        </ng-template>
     </div>
     <section>
         <main class="bg-white rounded-lg shadow-md p-4  mt-10 w-1/5 fixed">
@@ -18,13 +32,26 @@
                     Ver mas
                 </button>
             </div>
-            <div class="flex items-center gap-2 mb-1" *ngFor="let user of following | slice:0:3">
-                <img [src]="user.profile_image_url" alt="profile picture" class="w-10 h-10 rounded-xl hover:opacity-80 cursor-pointer"  (click)="goProfile(user.id_user)">
-                <p  (click)="goProfile(user.id_user)" class="hover:underline cursor-pointer">{{ user.name | titlecase }} {{ user.lastname | titlecase }}</p>
-            </div>
-            <div *ngIf="following.length == 0">
-                <p class="text-center text-gray-500">No sigue a ningún usuario</p>
-            </div>
+            <ng-container *ngIf="loadingFollowing; else followingContent">
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 mb-1" *ngFor="let _ of [1, 2, 3]">
+                        <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+                        <div class="flex-1 space-y-2">
+                            <p-skeleton width="75%" height="1rem"></p-skeleton>
+                            <p-skeleton width="45%" height="0.8rem"></p-skeleton>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #followingContent>
+                <div class="flex items-center gap-2 mb-1" *ngFor="let user of following | slice:0:3">
+                    <img [src]="user.profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="profile picture" class="w-10 h-10 rounded-full object-cover hover:opacity-80 cursor-pointer"  (click)="goProfile(user.id_user)">
+                    <p  (click)="goProfile(user.id_user)" class="hover:underline cursor-pointer">{{ user.name | titlecase }} {{ user.lastname | titlecase }}</p>
+                </div>
+                <div *ngIf="following.length == 0">
+                    <p class="text-center text-gray-500">No sigue a ningún usuario</p>
+                </div>
+            </ng-template>
         </main>
     </section>
 </main>

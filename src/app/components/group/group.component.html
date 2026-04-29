@@ -4,7 +4,8 @@
     class="border border-gray-300 rounded-lg p-4 flex items-center space-x-4"
   >
     <img
-      [src]="forum.image_url"
+      [src]="forum.image_url || 'assets/placeholders/group.svg'"
+      (error)="$any($event.target).src='assets/placeholders/group.svg'"
       alt="{{ forum.name }}"
       class="w-12 h-12 rounded-full"
     />

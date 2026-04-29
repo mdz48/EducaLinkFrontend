@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { IForum } from '../../models/iforum';
 import { ForumService } from '../../services/forum.service';
@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../auth/auth.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PostComponent } from '../../components/post/post.component';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
@@ -35,8 +35,9 @@ export class ForumComponent implements OnInit {
     private postService: PostService,
     private userService: UserService,
     private toastr: ToastrService,
-    private authService : AuthService
-  ) {}
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   ngOnInit(): void {
     this.initializeData();
@@ -92,7 +93,9 @@ export class ForumComponent implements OnInit {
   }
 
   editForum(): void {
-    localStorage.setItem('forumId', this.forum.id_forum.toString());
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('forumId', this.forum.id_forum.toString());
+    }
     this.router.navigate(['/editforum']);
   }
 
@@ -107,7 +110,7 @@ export class ForumComponent implements OnInit {
         this.toastr.success('Te has unido al foro exitosamente');
         this.visible = false;
         this.isCurrentUserMember = true;
-        this.loadForumMembers(); 
+        this.loadForumMembers();
       },
       error: (err) => {
         if (err.error.detail == 'Contraseña incorrecta') {
@@ -129,8 +132,8 @@ export class ForumComponent implements OnInit {
     this.userService.leaveForum(this.forum.id_forum, this.current_id).subscribe({
       next: () => {
         this.toastr.success('Has abandonado el foro exitosamente');
-        this.isCurrentUserMember = false; 
-        this.loadForumMembers(); 
+        this.isCurrentUserMember = false;
+        this.loadForumMembers();
       },
       error: (err) => {
         console.error('Error al abandonar el foro:', err);
@@ -159,7 +162,7 @@ export class ForumComponent implements OnInit {
     this.userService.leaveForum(this.forum.id_forum, id_user).subscribe({
       next: () => {
         this.toastr.success('Usuario expulsado exitosamente');
-        this.loadForumMembers(); 
+        this.loadForumMembers();
       },
       error: (err) => {
         console.error('Error al expulsar al usuario:', err);

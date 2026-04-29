@@ -1,6 +1,6 @@
 <div class="bg-white p-4 rounded-lg shadow-md flex flex-col space-y-4 cursor-pointer md:mt-10" (click)="goPost()">
     <div class="flex items-center space-x-4">
-      <img [src]="user.profile_image_url" alt="Profile" class="w-12 h-12 rounded-full">
+      <img [src]="user.profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="Profile" class="w-12 h-12 rounded-full">
       <input
         type="text"
         placeholder="¿Quieres publicar algo?"

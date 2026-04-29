@@ -23,7 +23,8 @@
       <div class="w-1/3 p-6 flex flex-col justify-between">
         <div class="flex items-center gap-4">
           <img
-            [src]="seller.profile_image_url || 'default-avatar.png'"
+            [src]="seller.profile_image_url || 'assets/placeholders/avatar.svg'"
+            (error)="$any($event.target).src='assets/placeholders/avatar.svg'"
             alt="Perfil del vendedor"
             class="w-12 h-12 rounded-full object-cover"
           />
@@ -60,7 +61,8 @@
 
       <div class="w-2/3 bg-gray-200 flex items-center justify-center">
         <img
-          [src]="salePost.image_url || 'default-image.png'"
+          [src]="salePost.image_url || 'assets/placeholders/sale.svg'"
+          (error)="$any($event.target).src='assets/placeholders/sale.svg'"
           alt="Imagen del post"
           class="max-w-full max-h-full object-contain"
         />

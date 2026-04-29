@@ -5,13 +5,13 @@ import { Observable, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { isPlatformBrowser } from '@angular/common';
 import { IUserData } from '../models/iuser-data';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ForumService {
-  // private url = 'http://localhost:8000';
-  private url = 'http://98.85.11.22:8000'
+  private url = environment.apiUrl;
   private idTemp = 0;
   httpOptions = {
     headers: new HttpHeaders(

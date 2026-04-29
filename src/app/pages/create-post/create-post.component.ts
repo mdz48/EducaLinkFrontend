@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { DropdownModule } from 'primeng/dropdown';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { IForum } from '../../models/iforum';
 import { UserService } from '../../services/user.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -27,12 +27,14 @@ export class CreatePostComponent {
   selectedFiles: File[] = []; // Cambiado a tipo File
   user: IUserData = {} as IUserData;
   constructor(
-    readonly userService: UserService, 
-    readonly postService: PostService, 
+    readonly userService: UserService,
+    readonly postService: PostService,
     readonly authService: AuthService,
     readonly toastr: ToastrService,
     private router: Router,
-    readonly forumService: ForumService
+    readonly forumService: ForumService,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private doc: Document
   ) {
     this.user = this.authService.getUser() as IUserData;
     this.forumService.getForumsByUser(this.user.id_user).subscribe((data: any) => {
@@ -75,10 +77,11 @@ export class CreatePostComponent {
   }
 
   selectFile(fileType: string) {
-    const input = document.createElement('input');
+    if (!isPlatformBrowser(this.platformId)) return;
+    const input = this.doc.createElement('input');
     input.type = 'file';
     input.accept = fileType === 'image' ? 'image/*' : '.pdf,.doc,.docx';
-    input.multiple = true; // Permitir múltiples archivos
+    input.multiple = true;
     input.onchange = (event: any) => {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {

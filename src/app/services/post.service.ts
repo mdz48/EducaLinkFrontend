@@ -8,13 +8,13 @@ import { IForum } from '../models/iforum';
 import { IUserData } from '../models/iuser-data';
 import { IComment } from '../models/icomment';
 import { IAd } from '../models/iad';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  private url = 'http://98.85.11.22:8000';
-  // private url = 'http://localhost:8000';
+  private url = environment.apiUrl;
   private tempId: number = 0;
   constructor(private http: HttpClient, readonly authService: AuthService) {}
 

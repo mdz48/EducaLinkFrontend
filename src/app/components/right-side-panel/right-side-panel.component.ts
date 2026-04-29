@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { FollowingSideComponent } from '../following-side/following-side.component';
 import { GroupComponent } from '../group/group.component';
 import { GroupListComponent } from '../group-list/group-list.component';
@@ -7,25 +7,29 @@ import { AuthService } from '../../auth/auth.service';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { IForum } from '../../models/iforum';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { IUserData } from '../../models/iuser-data';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-right-side-panel',
   standalone: true,
-  imports: [GroupItemComponent, CommonModule],
+  imports: [GroupItemComponent, CommonModule, SkeletonModule],
   templateUrl: './right-side-panel.component.html',
   styleUrl: './right-side-panel.component.css'
 })
-export class RightSidePanelComponent implements OnInit{
-  @Input() forums : IForum[] = []
+export class RightSidePanelComponent implements OnInit {
+  @Input() forums: IForum[] = []
   @Input() user: IUserData = {} as IUserData;
+  @Input() loadingForums = false;
   following: IUserData[] = [];
+  loadingFollowing = true;
 
   constructor(
-    private router: Router, 
-    private userService: UserService, 
-    private authService: AuthService
+    private router: Router,
+    private userService: UserService,
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
@@ -35,15 +39,20 @@ export class RightSidePanelComponent implements OnInit{
   }
 
   loadFollowing() {
+    this.loadingFollowing = true;
     this.userService.getFollowing(this.user.id_user).subscribe({
       next: (data: IUserData[]) => {
         this.following = data;
+        this.loadingFollowing = false;
         console.log(this.following);
+      },
+      error: () => {
+        this.loadingFollowing = false;
       },
     });
   }
-  
-  goGroups() { 
+
+  goGroups() {
     this.userService.getTempId();
     if (!this.userService.getTempId()) {
       this.userService.setTempId(this.authService.getUser()?.id_user as number)
@@ -58,7 +67,9 @@ export class RightSidePanelComponent implements OnInit{
   }
 
   goFollowing(id_user: number) {
-    localStorage.setItem('userTemp', JSON.stringify(id_user));
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('userTemp', JSON.stringify(id_user));
+    }
     this.router.navigate(['/user-following']);
   }
 }

@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IUserData } from '../../models/iuser-data';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -22,7 +23,14 @@ export class EditProfileComponent implements OnInit {
   backgroundImageFile: File | null = null;
   profileImageFile: File | null = null;
 
-  constructor(private userService: UserService, private router: Router, private toastr : ToastrService) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private toastr: ToastrService,
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private doc: Document
+  ) { }
 
   ngOnInit(): void {
     const userId = this.getLoggedInUserId();
@@ -52,13 +60,13 @@ export class EditProfileComponent implements OnInit {
       }
       if (this.backgroundImageFile) {
         formData.append('background_image', this.backgroundImageFile);
-    } else {
+      } else {
         console.warn('No se seleccionó una imagen de fondo.');
-    }
+      }
 
-    if (this.profileImageFile) {
+      if (this.profileImageFile) {
         formData.append('profile_image', this.profileImageFile);
-    } else {
+      } else {
         console.warn('No se seleccionó una imagen de perfil.');
       }
 
@@ -77,7 +85,8 @@ export class EditProfileComponent implements OnInit {
   }
 
   triggerFileInput(type: 'background' | 'profile'): void {
-    const inputElement = document.createElement('input');
+    if (!isPlatformBrowser(this.platformId)) return;
+    const inputElement = this.doc.createElement('input');
     inputElement.type = 'file';
     inputElement.accept = 'image/*';
     inputElement.onchange = (event: Event) => this.onImageSelected(event, type);
@@ -98,10 +107,10 @@ export class EditProfileComponent implements OnInit {
   }
 
   private getLoggedInUserId(): number {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!user || !user.id_user) {
+    const user = this.authService.getUser();
+    if (!user?.id_user) {
       console.error('Usuario no logueado o ID no disponible.');
-      this.router.navigate(['/login']); // Redirige al login si no hay usuario logueado
+      this.router.navigate(['/login']);
       return 0;
     }
     return user.id_user;

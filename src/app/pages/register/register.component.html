@@ -76,10 +76,26 @@
       <button
         type="button"
         (click)="setData()"
-        class="w-full bg-white text-[#3A00AE] py-2 rounded-md font-medium flex justify-center items-center hover:bg-gray-200 transition"
+        [disabled]="loading"
+        [class.is-loading]="loading"
+        [class.hover:bg-gray-200]="!loading"
+        class="auth-submit auth-submit--inverse relative w-full overflow-hidden bg-white text-[#3A00AE] py-2 rounded-md font-medium flex justify-center items-center transition disabled:cursor-not-allowed"
       >
-        Crear Cuenta
-        <span class="ml-2 text-2xl font-bold">&#10132;</span>
+        <span class="auth-submit__shimmer" *ngIf="loading"></span>
+        <span class="relative inline-flex items-center justify-center gap-3">
+          <ng-container *ngIf="!loading">
+            Crear Cuenta
+            <span class="ml-2 text-2xl font-bold">&#10132;</span>
+          </ng-container>
+          <ng-container *ngIf="loading">
+            <span class="auth-dots" aria-hidden="true">
+              <span class="auth-dot"></span>
+              <span class="auth-dot"></span>
+              <span class="auth-dot"></span>
+            </span>
+            <span class="tracking-wide">Creando cuenta</span>
+          </ng-container>
+        </span>
       </button>
     </form>
   </div>

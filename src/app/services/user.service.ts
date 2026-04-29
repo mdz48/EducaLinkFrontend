@@ -7,13 +7,13 @@ import { AuthService } from '../auth/auth.service';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { filter, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  // private url = 'http://localhost:8000';
-  private url = 'http://98.85.11.22:8000';
+  private url = environment.apiUrl;
   private idTemp = 0;
   private userDataSubject = new BehaviorSubject<IUserData | null>(null);
   httpOptions = {

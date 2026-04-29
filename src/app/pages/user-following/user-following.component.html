@@ -1,9 +1,19 @@
 <app-navbar></app-navbar>
-<main class="flex justify-center">
-    <section class="bg-white rounded-lg shadow-md p-4 w-full space-y-4 md:w-1/2 mt-4">
-        <div *ngFor="let user of following" class="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg cursor-pointer" (click)="goProfile(user.id_user)">
+<main class="flex justify-center md:mt-4">
+  <section class="bg-white rounded-lg shadow-md p-4 w-full space-y-4 md:w-1/2">
+    <div class="flex items-center justify-between gap-3 mb-4">
+      <h2 class="text-lg font-semibold">Siguiendo</h2>
+      <button
+        type="button"
+        (click)="goBack()"
+        class="rounded-full bg-[#3F008F] px-4 py-2 text-white font-semibold hover:bg-[#6e2ec2] transition-colors"
+      >
+        Volver
+      </button>
+    </div>
+    <div *ngFor="let user of following" class="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg cursor-pointer" (click)="goProfile(user.id_user)">
           <div class="flex items-center gap-2">
-            <img [src]="user.profile_image_url" alt="profile picture" class="w-10 h-10 rounded-xl hover:opacity-80 cursor-pointer"  (click)="goProfile(user.id_user)">
+            <img [src]="user.profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="profile picture" class="w-10 h-10 rounded-full object-cover hover:opacity-80 cursor-pointer"  (click)="goProfile(user.id_user)">
             <p  (click)="goProfile(user.id_user)" class="hover:underline cursor-pointer">{{ user.name | titlecase }} {{ user.lastname | titlecase }}</p>
           </div>
           <div>

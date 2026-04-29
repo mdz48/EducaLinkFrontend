@@ -23,12 +23,26 @@
     </div>
 
     <div class="w-full lg:space-y-4 bg-transparent">
-      <ng-container *ngFor="let post of posts; let i = index">
-        <app-post [post]="post" (postDeleted)="onPostDeleted($event)"></app-post>
-        <ng-container *ngIf="(i + 1) % 5 === 0 && shuffledAds && shuffledAds.length > 0">
-          <app-ad [ad]="shuffledAds[Math.floor(i/5) % shuffledAds.length]"></app-ad>
-        </ng-container>
+      <ng-container *ngIf="isLoadingPosts; else postsContent">
+        <div class="space-y-4">
+          <div class="rounded-2xl bg-white p-4 shadow-md border border-gray-100 animate-pulse" *ngFor="let _ of [1, 2, 3]">
+            <p-skeleton width="8rem" height="1rem" styleClass="mb-3"></p-skeleton>
+            <p-skeleton width="100%" height="1rem" styleClass="mb-2"></p-skeleton>
+            <p-skeleton width="92%" height="1rem" styleClass="mb-2"></p-skeleton>
+            <p-skeleton width="65%" height="1rem" styleClass="mb-4"></p-skeleton>
+            <p-skeleton width="100%" height="14rem"></p-skeleton>
+          </div>
+        </div>
       </ng-container>
+
+      <ng-template #postsContent>
+        <ng-container *ngFor="let post of posts; let i = index">
+          <app-post [post]="post" (postDeleted)="onPostDeleted($event)"></app-post>
+          <ng-container *ngIf="(i + 1) % 5 === 0 && shuffledAds && shuffledAds.length > 0">
+            <app-ad [ad]="shuffledAds[Math.floor(i/5) % shuffledAds.length]"></app-ad>
+          </ng-container>
+        </ng-container>
+      </ng-template>
     </div>
   </section>
 
@@ -37,7 +51,7 @@
     <div class="mt-4">
       <app-following-side></app-following-side>
     </div> -->
-    <app-right-side-panel  [user]="user" [forums]="forums"></app-right-side-panel> 
+    <app-right-side-panel  [user]="user" [forums]="forums" [loadingForums]="isLoadingForums"></app-right-side-panel> 
   </section>
 </main>
 <p-menu #filterMenuRef [model]="filterMenu" [popup]="true"></p-menu>

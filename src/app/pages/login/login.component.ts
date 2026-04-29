@@ -9,7 +9,6 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { log } from 'console';
 
 @Component({
   selector: 'app-login',
@@ -21,16 +20,19 @@ import { log } from 'console';
 export class LoginComponent {
   loginForm: FormGroup;
   isRegisterModalOpen = false;
+  loading = false;
 
   constructor(readonly authService: AuthService, readonly messageService: MessageService, readonly userService: UserService, readonly router: Router, readonly toastr: ToastrService) {
       this.loginForm = new FormGroup({
           username: new FormControl('', [Validators.required, Validators.email]),
-          password: new FormControl('', [Validators.required, Validators.minLength(4)])
+          password: new FormControl('', [Validators.required, Validators.minLength(1)])
       });
   }
 
-  onSubmit(): void {    
+  onSubmit(): void {
+    if (this.loading) return;
     if (this.loginForm.valid) {
+      this.loading = true;
       this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
         next: (res) => {
           this.authService.setToken(res.access_token);
@@ -40,12 +42,18 @@ export class LoginComponent {
           this.router.navigate(['/home']);
         },
         error: (error) => {
+          this.loading = false;
           this.toastr.error('Correo o contraseña incorrectos');
         }
       })
     } else {
       this.toastr.error('Formulario inválido');
     }
+  }
+
+  loginDemo(): void {
+    this.loginForm.setValue({ username: 'test@demo.com', password: '1' });
+    this.onSubmit();
   }
 
   openRegisterModal() {

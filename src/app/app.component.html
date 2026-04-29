@@ -1,3 +1,43 @@
 <p-toast position="bottom-center"/>
 <router-outlet></router-outlet>
 
+<div *ngIf="showDemoModal"
+     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 md:p-8 text-gray-800">
+    <h2 class="text-xl md:text-2xl font-semibold mb-3 text-[#3A00AE]">
+      Versión demo de EducaLink
+    </h2>
+
+    <p class="text-sm md:text-base mb-4">
+      Estás viendo una <strong>versión demo</strong> de la aplicación.
+      No todas las funciones están disponibles y algunos datos son de prueba.
+    </p>
+
+    <p class="text-sm md:text-base mb-4">
+      El servidor puede tardar hasta un minuto en activarse tras un periodo de inactividad.
+      Por favor espera a que el servidor esté listo antes de continuar.
+    </p>
+
+    <div class="flex items-center gap-3 mb-6 p-3 rounded-md"
+         [ngClass]="serverReady ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'">
+      <ng-container *ngIf="!serverReady">
+        <span class="inline-block w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></span>
+        <span class="text-sm">Esperando respuesta del servidor…</span>
+      </ng-container>
+      <ng-container *ngIf="serverReady">
+        <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
+        <span class="text-sm">¡Servidor listo! Ya puedes continuar.</span>
+      </ng-container>
+    </div>
+
+    <button type="button"
+            (click)="dismissDemoModal()"
+            [disabled]="!serverReady"
+            class="w-full py-2 md:py-3 rounded-md font-medium text-white transition"
+            [ngClass]="serverReady
+              ? 'bg-[#3A00AE] hover:bg-opacity-90 cursor-pointer'
+              : 'bg-gray-400 cursor-not-allowed'">
+      {{ serverReady ? 'Continuar' : 'Conectando…' }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ng serve *)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //F //PID 10536)",
+      "Bash(awk '{print $5}')",
+      "Bash(xargs -I {} taskkill //F //PID {})"
+    ]
+  }
+}

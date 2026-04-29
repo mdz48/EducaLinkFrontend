@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -33,12 +33,12 @@ import { MenuItem } from 'primeng/api';
   templateUrl: './search-page.component.html',
   styleUrl: './search-page.component.css'
 })
-export class SearchPageComponent implements OnInit{
-  searchValue = localStorage.getItem('search') || '';
+export class SearchPageComponent implements OnInit {
+  searchValue = '';
   forums: IForum[] = [];
   users: IUserData[] = [];
   posts: IPost[] = [];
-  
+
   noResults = false;
   currentSelection = 'all';
   sales: ISalePost[] = [];
@@ -81,7 +81,14 @@ export class SearchPageComponent implements OnInit{
     }
   ];
 
-  constructor(private searchService: SearchService) {}
+  constructor(
+    private searchService: SearchService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.searchValue = localStorage.getItem('search') || '';
+    }
+  }
 
   ngOnInit() {
     this.getAllResults();
@@ -95,17 +102,17 @@ export class SearchPageComponent implements OnInit{
       this.forums = data;
       this.updateNoResults();
     });
-    
+
     this.searchService.searchUsersByName(this.searchValue).subscribe((data: any) => {
       this.users = data;
       this.updateNoResults();
     });
-    
+
     this.searchService.searchSalesByTitle(this.searchValue).subscribe((data: any) => {
       this.sales = data;
       this.updateNoResults();
     });
-    
+
     this.searchService.searchPostsByTitle(this.searchValue).subscribe((data: any) => {
       this.posts = data;
       this.updateNoResults();
@@ -196,10 +203,10 @@ export class SearchPageComponent implements OnInit{
 
   updateNoResults() {
     if (this.currentSelection === 'all') {
-      this.noResults = this.users.length === 0 && 
-                      this.posts.length === 0 && 
-                      this.forums.length === 0 &&
-                      this.sales.length === 0;
+      this.noResults = this.users.length === 0 &&
+        this.posts.length === 0 &&
+        this.forums.length === 0 &&
+        this.sales.length === 0;
     } else if (this.currentSelection === 'forums') {
       this.noResults = this.forums.length === 0;
     } else if (this.currentSelection === 'users') {

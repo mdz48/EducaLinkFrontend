@@ -2,7 +2,7 @@
     <main class="bg-white rounded-lg shadow-md p-4  mt-10 w-1/5">
         <h2>Siguiendo</h2>
         <div class="flex items-center gap-2" *ngFor="let user of following">
-            <img [src]="user.profile_image_url" alt="profile picture">
+            <img [src]="user.profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="profile picture" class="w-10 h-10 rounded-full object-cover">
             <p>{{ user.name }} {{ user.lastname }}</p>
         </div>
     </main>

@@ -42,7 +42,7 @@
 
   <div class="relative" (click)="toggleMenu()">
     <div class="flex items-center bg-[#3A00AE] text-white rounded-full py-1 px-3 space-x-3 max-w-xs ml-6 cursor-pointer">
-      <img [src]="profile_image_url" alt="Profile Picture" class="w-10 h-10 rounded-full" />
+      <img [src]="profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="Profile Picture" class="w-10 h-10 rounded-full" />
       <div class="whitespace-nowrap">
         <p class="font-semibold text-sm">{{ name }}</p>
         <p class="text-xs">{{ education_level }}</p>
@@ -63,7 +63,7 @@
 <!-- MOBILE PARTE -->
 <div class="md:hidden sticky top-0 left-0 w-full bg-white p-4 flex items-center justify-between z-10">
   <button (click)="toggleSidebar()" class="flex items-center space-x-2">
-    <img [src]="profile_image_url" alt="Profile Picture" class="w-10 h-10 rounded-full" />
+    <img [src]="profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="Profile Picture" class="w-10 h-10 rounded-full" />
   </button>
   
   <div class="flex-1 flex justify-center mx-2">
@@ -94,7 +94,7 @@
   <div class="flex flex-col h-full">
     <!-- Cabecera del perfil -->
     <div class="flex items-center space-x-3 p-4 border-b">
-      <img [src]="profile_image_url" alt="Profile Picture" class="w-16 h-16 rounded-full" />
+      <img [src]="profile_image_url || 'assets/placeholders/avatar.svg'" (error)="$any($event.target).src='assets/placeholders/avatar.svg'" alt="Profile Picture" class="w-16 h-16 rounded-full" />
       <div>
         <h2 class="font-bold text-lg">{{ name }}</h2>
         <p class="text-gray-600">{{ education_level }}</p>

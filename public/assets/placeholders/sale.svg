@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Imagen de venta predeterminada" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="saleBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3A00AE"/>
+      <stop offset="100%" stop-color="#7B3FF2"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#saleBg)"/>
+  <g transform="translate(200 150)">
+    <path d="M -55 -40 L 25 -40 L 60 -5 L -20 75 Z" fill="#ffffff" fill-opacity="0.95"/>
+    <circle cx="15" cy="-20" r="9" fill="#3A00AE"/>
+  </g>
+  <text x="200" y="245" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-style="italic" fill="#ffffff" fill-opacity="0.85">Sin imagen</text>
+</svg>

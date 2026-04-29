@@ -17,24 +17,27 @@ import { RightSidePanelComponent } from "../../components/right-side-panel/right
 import { DialogModule } from 'primeng/dialog';
 import { MenuItem } from 'primeng/api';
 import { Menu, MenuModule } from 'primeng/menu';
+import { SkeletonModule } from 'primeng/skeleton';
 import { AdService } from '../../services/ad.service';
 import { IAd } from '../../models/iad';
 import { AdComponent } from '../../components/ad/ad.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    PostInputComponent, 
-    PostComponent, 
-    
-    NavbarComponent, 
-    
+    CommonModule,
+    PostInputComponent,
+    PostComponent,
+
+    NavbarComponent,
+
     RightSidePanelComponent,
     DialogModule,
-    MenuModule
-  , AdComponent],
+    MenuModule,
+    SkeletonModule
+    , AdComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   providers: [PostService]
@@ -47,6 +50,8 @@ export class HomeComponent implements OnInit {
   forums: IForum[] = [];
   user: IUserData = {} as IUserData;
   idFollowed: number[] = [];
+  isLoadingPosts = true;
+  isLoadingForums = true;
   showFilterModal: boolean = false;
   filterMenu: MenuItem[] = [
     {
@@ -73,12 +78,14 @@ export class HomeComponent implements OnInit {
     private readonly postService: PostService,
     private readonly forumService: ForumService,
     private adService: AdService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const userData = this.authService.getUser();
     if (userData) {
       this.user = userData;
+      this.isLoadingPosts = true;
+      this.isLoadingForums = true;
       this.loadAds();
       setTimeout(() => {
         console.log('Estado actual:');
@@ -89,28 +96,36 @@ export class HomeComponent implements OnInit {
       this.filterByRecommended(userData);
     } else {
       console.error('Usuario no autenticado');
-      this.router.navigate(['/login']); 
+      this.router.navigate(['/login']);
     }
   }
 
   filterByRecommended(user: IUserData): void {
+    this.isLoadingForums = true;
+    this.isLoadingPosts = true;
+    this.posts = [];
     this.forumService.getForumsByUser(user.id_user).subscribe({
       next: (data: IForum[]) => {
         this.forums = data;
+        this.isLoadingForums = false;
         console.log(this.forums);
         this.idForums = data.map((forum: IForum) => forum.id_forum);
         console.log(this.idForums);
         this.postService.getPostsByForumExcludeUser(this.idForums, user.id_user).subscribe({
           next: (data: IPost[]) => {
-            this.posts = data.flat(); 
+            this.posts = data.flat();
+            this.isLoadingPosts = false;
             console.log(this.posts);
           },
           error: (err) => {
+            this.isLoadingPosts = false;
             console.error('Error al obtener publicaciones:', err);
           }
         });
       },
       error: (err) => {
+        this.isLoadingForums = false;
+        this.isLoadingPosts = false;
         console.error('Error al obtener foros del usuario:', err);
       }
     });
@@ -124,8 +139,8 @@ export class HomeComponent implements OnInit {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
-      [array[currentIndex], array[randomIndex]] = 
-      [array[randomIndex], array[currentIndex]];
+      [array[currentIndex], array[randomIndex]] =
+        [array[randomIndex], array[currentIndex]];
     }
 
     return array;
@@ -150,20 +165,28 @@ export class HomeComponent implements OnInit {
 
 
   filterByFollowed(): void {
+    this.isLoadingPosts = true;
+    this.posts = [];
     this.userService.getFollowing(this.user.id_user).subscribe({
       next: (data: IUserData[]) => {
         console.log(data);
         this.idFollowed = data.map((user: IUserData) => user.id_user);
-        for (const id of this.idFollowed) {
-          this.postService.getPostsByUserWhereIsPrivateAndPublic(id).subscribe({
-            next: (data: IPost[]) => {
-              this.posts = data;
-            },
-            error: (err) => {
-            console.error('Error al obtener publicaciones:', err);
-            }
-          });
+        if (this.idFollowed.length === 0) {
+          this.isLoadingPosts = false;
+          return;
         }
+        forkJoin(
+          this.idFollowed.map((id: number) => this.postService.getPostsByUserWhereIsPrivateAndPublic(id))
+        ).subscribe({
+          next: (data: IPost[][]) => {
+            this.posts = data.flat();
+            this.isLoadingPosts = false;
+          },
+          error: (err) => {
+            this.isLoadingPosts = false;
+            console.error('Error al obtener publicaciones:', err);
+          }
+        });
       }
     });
   }

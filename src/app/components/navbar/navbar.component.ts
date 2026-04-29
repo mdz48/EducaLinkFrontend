@@ -1,8 +1,8 @@
 import { IUserData } from './../../models/iuser-data';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
@@ -13,8 +13,8 @@ import { ButtonModule } from 'primeng/button';
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    RouterLink, 
-    CommonModule, 
+    RouterLink,
+    CommonModule,
     FormsModule,
     SidebarModule,
     ButtonModule
@@ -31,9 +31,13 @@ export class NavbarComponent implements OnInit {
   search: string = '';
   sidebarVisible: boolean = false;
 
-  constructor(readonly authService: AuthService, readonly userService: UserService, private router: Router, private toastr : ToastrService) {
-
-  }
+  constructor(
+    readonly authService: AuthService,
+    readonly userService: UserService,
+    private router: Router,
+    private toastr: ToastrService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
   ngOnInit() {
     const userData = this.authService.getUser();
     if (userData) {
@@ -47,12 +51,15 @@ export class NavbarComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al obtener los datos del usuario:', err);
-        }})
+        }
+      })
     }
   }
 
   goSearch() {
-    localStorage.setItem('search', this.search);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('search', this.search);
+    }
     this.searchEvent.emit(this.search);
     this.router.navigate(['/search']);
   }
@@ -76,26 +83,26 @@ export class NavbarComponent implements OnInit {
   editProfile() {
     this.userService.setTempId(this.user.id_user);
     this.router.navigate(['/editprofile']);
-    this.menuOpen = false; 
+    this.menuOpen = false;
   }
 
   goMyForums() {
     this.router.navigate(['/user-forums']);
-    this.menuOpen = false; 
+    this.menuOpen = false;
   }
 
   goFollowing() {
     this.router.navigate(['/user-following']);
-    this.menuOpen = false; 
+    this.menuOpen = false;
   }
 
   goAds() {
     this.router.navigate(['/ads']);
-    this.menuOpen = false; 
+    this.menuOpen = false;
   }
 
   logout() {
-    this.authService.logout().subscribe ({
+    this.authService.logout().subscribe({
       next: (data) => {
         this.router.navigate(['/']);
       },
@@ -103,7 +110,7 @@ export class NavbarComponent implements OnInit {
         this.toastr.error('Error al cerrar sesión', 'Error');
       }
     });
-    this.menuOpen = false; 
+    this.menuOpen = false;
   }
 
   toggleSidebar() {

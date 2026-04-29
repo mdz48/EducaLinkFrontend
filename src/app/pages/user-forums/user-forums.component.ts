@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { IForum } from '../../models/iforum';
 import { GroupItemComponent } from '../../components/group-item/group-item.component';
@@ -18,17 +18,25 @@ import { IUserData } from '../../models/iuser-data';
 export class UserForumsComponent implements OnInit {
   forums: IForum[] = []
   user: IUserData = {} as IUserData;
-  
+
   ngOnInit() {
     this.user = this.authService.getUser() as IUserData;
     if (this.user.id_user) {
       this.forumService.getForumsByUser(this.user.id_user).subscribe((data) => {
         this.forums = data;
       });
-      
+
     }
   }
 
+  goBack(): void {
+    this.location.back();
+  }
 
-  constructor(private forumService: ForumService, private authService: AuthService) { }
+
+  constructor(
+    private forumService: ForumService,
+    private authService: AuthService,
+    private location: Location
+  ) { }
 }

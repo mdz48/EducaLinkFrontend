@@ -18,19 +18,44 @@
                  class="w-full p-2 md:p-3 mt-1 text-gray-800 bg-gray-100 rounded-md focus:outline-none focus:ring focus:ring-[#3A00AE]">
         </div>
         
-        <div class="mb-6 md:mb-8">
+        <div class="mb-4 md:mb-5">
           <label for="password" class="block text-lg font-medium">Contraseña</label>
-          <input type="password" id="password" formControlName="password" 
+          <input type="password" id="password" formControlName="password"
                  class="w-full p-2 md:p-3 mt-1 text-gray-800 bg-gray-100 rounded-md focus:outline-none focus:ring focus:ring-[#3A00AE]">
         </div>
-        
-        <button type="submit" 
-                class="w-full bg-[#3A00AE] text-white py-2 md:py-3 rounded-md font-medium text-lg hover:bg-opacity-90 transition mt-4 md:mt-6">
-          Iniciar Sesión
+
+        <button type="submit"
+                [disabled]="loading"
+                class="auth-submit relative w-full overflow-hidden bg-[#3A00AE] text-white py-2 md:py-3 rounded-md font-medium text-lg transition mt-3 disabled:cursor-not-allowed"
+                [class.is-loading]="loading"
+                [class.hover:bg-opacity-90]="!loading">
+          <span class="auth-submit__shimmer" *ngIf="loading"></span>
+          <span class="relative inline-flex items-center justify-center gap-3">
+            <ng-container *ngIf="!loading">Iniciar Sesión</ng-container>
+            <ng-container *ngIf="loading">
+              <span class="auth-dots" aria-hidden="true">
+                <span class="auth-dot"></span>
+                <span class="auth-dot"></span>
+                <span class="auth-dot"></span>
+              </span>
+              <span class="tracking-wide">Iniciando sesión</span>
+            </ng-container>
+          </span>
         </button>
       </form>
-      
-      <p class="text-center text-base mt-4 md:mt-6">
+
+      <div class="flex items-center gap-3 my-3">
+        <span class="flex-1 h-px bg-gray-200"></span>
+        <span class="text-xs text-gray-400 tracking-widest uppercase">o</span>
+        <span class="flex-1 h-px bg-gray-200"></span>
+      </div>
+
+      <button type="button" (click)="loginDemo()" [disabled]="loading"
+              class="demo-btn w-full py-2 md:py-2.5 rounded-md text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50">
+        Acceso rápido · <span class="demo-badge">DEMO</span>
+      </button>
+
+      <p class="text-center text-sm mt-3">
         <button (click)="openRegisterModal()" class="underline text-[#3A00AE]">No tengo cuenta</button>
       </p>
     </div>
