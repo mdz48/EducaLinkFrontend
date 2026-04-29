@@ -110,20 +110,4 @@ Todas las rutas viven en `src/app/app.routes.ts`:
 | `/info`, `/help-section`   | ayuda / manual          | sí        |
 | `/categories/:category`    | `InfoComponent`         | sí        |
 
-### Modelos
 
-Las interfaces en `src/app/models/` (`IUserData`, `IPost`, `IForum`, `IComment`, `IChat`, `IMessage`, `ISalePost`, `ISaleChat`, `ISaleMessage`, `IAd`, `ICompany`) reflejan exactamente los campos del backend en **snake_case** (`id_user`, `profile_image_url`, `education_level`, `id_sale_post`, …). No los renombres a camelCase porque romperás el contrato con la API.
-
-## Cosas destacables del código
-
-- **Componentes 100% standalone**. Cada componente declara sus propios `imports`. No hay `AppModule`.
-- **Convención `setTempId` / `getTempId`** — varios servicios (`UserService`, `ForumService`, `PostService`) exponen este par para pasar un id de entidad entre páginas sin meterlo en query params. La página origen llama `setTempId(id)` antes de navegar y la destino lo lee en `ngOnInit`. Mantén el patrón si añades flujos similares.
-- **Foros con doble dimensión de búsqueda** — `ForumService` ofrece queries combinadas por `grade` y `education_level`, y endpoints `/not_in/` para mostrar foros a los que el usuario *aún no pertenece*. Los foros también pueden ser privados, en cuyo caso `joinForum()` envía un `password` como query param.
-- **Dos sistemas de chat paralelos** — el chat general (`/chat`, `/message`) y el chat de ventas (`/sale_chat`, `/sale_message`) viven separados en backend y frontend para que las conversaciones de marketplace no se mezclen con las sociales. Ambos están encapsulados en `ChatService`.
-- **Anuncios intercalados en el feed** — `AdService` (sólo gestionable por admin desde `/ads`) crea entidades `IAd` que el componente `AdComponent` renderiza intercaladas con los posts del home.
-- **Budgets de producción agresivos** — `angular.json` impone `initial: 1MB error` y `anyComponentStyle: 4kB error`. Si tu build prod falla, probablemente tienes un CSS de componente demasiado grande; mueve las reglas a Tailwind o a `styles.css`.
-- **Idioma del proyecto** — los comentarios, mensajes de toast y nombres de variables de dominio están en español. Cualquier texto nuevo de UI debe seguir esa convención.
-
-## Documentación adicional para Claude Code
-
-Si trabajas con Claude Code en este repo, revisa también [`CLAUDE.md`](./CLAUDE.md) — contiene notas operativas (gotchas de `FormData`, idioms de servicios, guardas SSR remanentes) que aceleran el onboarding del agente.
